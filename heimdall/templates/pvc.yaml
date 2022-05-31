@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "heimdall.fullname" . }}-config-pvc
+  namespace: homenet
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: {{ include "heimdall.fullname" . }}-config-pv
+  resources:
+    requests:
+      storage: {{ .Values.storage.configSize }}

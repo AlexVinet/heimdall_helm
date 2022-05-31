@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "heimdall.fullname" . }}-config-pv
+spec:
+  capacity:
+   storage: {{ .Values.storage.configSize }}
+  volumeMode: Filesystem
+  accessModes:
+   - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  claimRef:
+    name: {{ include "heimdall.fullname" . }}-config-pvc
+  csi:
+    driver: nfs.csi.k8s.io
+    readOnly: false
+    volumeHandle: heimdallvolume1  # make sure it's a unique id in the cluster
+    volumeAttributes:
+      server: xxx.xxx.xxx.xxx ## replace with your nfs server ip address
+      share: ## NFS server share path

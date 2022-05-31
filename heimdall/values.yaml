@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: linuxserver/heimdall
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+
+storage:
+  configSize: 1Gi
+
+timezone: America/New_York
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 250Mi
+  limits:
+    cpu: 500m
+    memory: 500Mi

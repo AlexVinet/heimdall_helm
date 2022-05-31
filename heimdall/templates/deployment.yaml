@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "heimdall.fullname" . }}
+  labels:
+    {{- include "heimdall.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "heimdall.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "heimdall.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{ range $index, $ports := $.Values.service.ports }}
+        ports:
+        - name: {{ $ports.name }}
+          containerPort: {{ $ports.targetPort }}
+        {{ end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        env:
+        - name: TZ
+          value: {{ .Values.timezone }}
+        volumeMounts:
+        - mountPath: /config
+          name: {{ include "heimdall.fullname" . }}-config-pv
+      volumes:
+      - name: {{ include "heimdall.fullname" . }}-config-pv
+        persistentVolumeClaim:
+          claimName: {{ include "heimdall.fullname" . }}-config-pvc
