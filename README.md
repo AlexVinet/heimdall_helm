@@ -12,7 +12,7 @@ Install heimdall service with the following commands:
 git clone https://github.com/AlexVinet/deluge_helm.git
 cd heimdall_helm/heimdall/
 Modify the pv.
-helm install deluge -f values.yaml .
+helm install heimdall -f values.yaml .
 ```
 
 >\*\*Note: You need to modify the pv.yaml with your own config.\*\*
